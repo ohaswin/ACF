@@ -1,0 +1,160 @@
+{% extends 'base.html' %}
+
+{% block title %}Agent Room - Content Factory{% endblock title %}
+
+{% block content %}
+<div class="max-w-5xl mx-auto space-y-6">
+    <div class="bg-dark rounded-xl shadow-lg border border-gray-800 p-6 flex justify-between items-center">
+        <div>
+            <h1 class="text-2xl font-bold text-white">{{ campaign.title }}</h1>
+            <p class="text-sm text-gray-400 mt-1">Status: <span id="campaign-status" class="uppercase font-semibold text-primary">{{ campaign.get_status_display }}</span></p>
+        </div>
+        <a href="{% url 'campaigns:review' campaign.id %}" id="review-btn" class="hidden py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-secondary hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-secondary focus:ring-offset-dark transition duration-150">
+            View Final Results
+        </a>
+    </div>
+
+    <!-- Agent Room Visualization -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        
+        <!-- Agent 1 -->
+        <div class="bg-darker border border-gray-800 rounded-lg p-5 flex flex-col items-center justify-center text-center">
+            <div class="w-16 h-16 rounded-full bg-blue-900 flex items-center justify-center mb-3 agent-icon" id="agent-1-icon">
+                <svg class="w-8 h-8 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+            </div>
+            <h3 class="font-semibold text-gray-200">Agent 1: Lead Research</h3>
+            <p class="text-xs text-gray-500 mt-2 h-4" id="agent-1-status">Waiting...</p>
+        </div>
+        
+        <!-- Agent 2 -->
+        <div class="bg-darker border border-gray-800 rounded-lg p-5 flex flex-col items-center justify-center text-center">
+            <div class="w-16 h-16 rounded-full bg-purple-900 flex items-center justify-center mb-3 agent-icon" id="agent-2-icon">
+               <svg class="w-8 h-8 text-purple-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+            </div>
+            <h3 class="font-semibold text-gray-200">Agent 2: Creative Copy</h3>
+            <p class="text-xs text-gray-500 mt-2 h-4" id="agent-2-status">Waiting...</p>
+        </div>
+
+        <!-- Agent 3 -->
+        <div class="bg-darker border border-gray-800 rounded-lg p-5 flex flex-col items-center justify-center text-center">
+            <div class="w-16 h-16 rounded-full bg-yellow-900 flex items-center justify-center mb-3 agent-icon" id="agent-3-icon">
+               <svg class="w-8 h-8 text-yellow-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            </div>
+            <h3 class="font-semibold text-gray-200">Agent 3: Editor-in-Chief</h3>
+            <p class="text-xs text-gray-500 mt-2 h-4" id="agent-3-status">Waiting...</p>
+        </div>
+    </div>
+
+    <!-- Live Log Feed -->
+    <div class="bg-dark rounded-xl shadow-lg border border-gray-800 flex flex-col h-96">
+        <div class="px-6 py-4 border-b border-gray-800 flex items-center justify-between bg-darker rounded-t-xl">
+            <h3 class="text-lg font-medium text-white flex items-center">
+                <svg class="w-5 h-5 mr-2 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
+                Live Agent Feed
+            </h3>
+            <div class="flex items-center">
+                <span class="flex h-3 w-3 relative">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+                </span>
+                <span class="ml-2 text-xs text-gray-400">Connected</span>
+            </div>
+        </div>
+        <div id="log-feed" class="flex-1 p-6 overflow-y-auto space-y-4 font-mono text-sm bg-black/20">
+            {% for log in logs %}
+            <div class="text-gray-400">
+                <span class="text-gray-500">[{{ log.created_at|date:"H:i:s" }}]</span> 
+                <span class="font-bold {% if 'System' in log.agent_name %}text-gray-300{% elif '1' in log.agent_name %}text-blue-400{% elif '2' in log.agent_name %}text-purple-400{% else %}text-yellow-400{% endif %}">[{{ log.agent_name }}]:</span>
+                <span class="text-gray-300 ml-1">{{ log.message }}</span>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block extra_scripts %}
+<style>
+    @keyframes pulse-ring {
+        0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7); }
+        70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(59, 130, 246, 0); }
+        100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); }
+    }
+    .agent-active { animation: pulse-ring 2s infinite; }
+</style>
+
+<script>
+    const campaignId = '{{ campaign.id }}';
+    const wsProtocol = window.location.protocol === "https:" ? "wss" : "ws";
+    const chatSocket = new WebSocket(wsProtocol + '://' + window.location.host + '/ws/campaigns/' + campaignId + '/');
+    const logFeed = document.querySelector('#log-feed');
+    
+    // Auto-scroll to bottom on load
+    logFeed.scrollTop = logFeed.scrollHeight;
+
+    function getAgentColor(agentName) {
+        if(agentName.includes('System')) return 'text-gray-300';
+        if(agentName.includes('1')) return 'text-blue-400';
+        if(agentName.includes('2')) return 'text-purple-400';
+        if(agentName.includes('3')) return 'text-yellow-400';
+        return 'text-white';
+    }
+
+    function updateAgentStatus(agentName, message) {
+        document.querySelectorAll('.agent-icon').forEach(el => el.classList.remove('agent-active'));
+        
+        if(agentName.includes('1')) {
+            document.getElementById('agent-1-status').innerText = 'Working...';
+            document.getElementById('agent-1-icon').classList.add('agent-active');
+        } else if(agentName.includes('2')) {
+            document.getElementById('agent-2-status').innerText = 'Typing...';
+            document.getElementById('agent-2-icon').classList.add('agent-active');
+        } else if(agentName.includes('3')) {
+            document.getElementById('agent-3-status').innerText = 'Critiquing...';
+            document.getElementById('agent-3-icon').classList.add('agent-active');
+        }
+        
+        if (message.includes("completed") || message.includes("critical error")) {
+             document.getElementById('campaign-status').innerText = message.includes("completed") ? 'COMPLETED' : 'FAILED';
+             document.getElementById('review-btn').classList.remove('hidden');
+             document.querySelectorAll('.agent-icon').forEach(el => el.classList.remove('agent-active'));
+             document.getElementById('agent-1-status').innerText = 'Done';
+             document.getElementById('agent-2-status').innerText = 'Done';
+             document.getElementById('agent-3-status').innerText = 'Done';
+        }
+    }
+
+    window.addEventListener('DOMContentLoaded', (event) => {
+        const initialStatus = '{{ campaign.status }}';
+        if (initialStatus === 'completed' || initialStatus === 'failed') {
+            document.getElementById('campaign-status').innerText = initialStatus.toUpperCase();
+            document.getElementById('review-btn').classList.remove('hidden');
+            document.querySelectorAll('.agent-icon').forEach(el => el.classList.remove('agent-active'));
+            document.getElementById('agent-1-status').innerText = 'Done';
+            document.getElementById('agent-2-status').innerText = 'Done';
+            document.getElementById('agent-3-status').innerText = 'Done';
+        }
+    });
+
+    chatSocket.onmessage = function(e) {
+        const data = JSON.parse(e.data);
+        const nameColor = getAgentColor(data.agent_name);
+        
+        const logHtml = `
+            <div class="text-gray-400 animate-fade-in-up">
+                <span class="text-gray-500">[${data.timestamp}]</span> 
+                <span class="font-bold ${nameColor}">[${data.agent_name}]:</span>
+                <span class="text-gray-300 ml-1">${data.message}</span>
+            </div>
+        `;
+        logFeed.insertAdjacentHTML('beforeend', logHtml);
+        logFeed.scrollTop = logFeed.scrollHeight;
+        
+        updateAgentStatus(data.agent_name, data.message);
+    };
+
+    chatSocket.onclose = function(e) {
+        console.error('Chat socket closed unexpectedly');
+    };
+</script>
+{% endblock extra_scripts %}

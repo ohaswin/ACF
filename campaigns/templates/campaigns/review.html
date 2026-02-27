@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+
+{% block title %}
+  Review Campaign - Content Factory
+{% endblock %}
+
+{% block content %}
+  <div class="max-w-7xl mx-auto space-y-6">
+    <div class="bg-dark rounded-xl shadow-lg border border-gray-800 p-6 flex justify-between items-center">
+      <div>
+        <h1 class="text-2xl font-bold text-white">{{ campaign.title }} - Final Review</h1>
+        <p class="text-sm text-gray-400 mt-1">Review the generated assets. You can regenerate specific pieces if needed.</p>
+      </div>
+      <div class="flex space-x-3">
+        <a href="{% url 'campaigns:dashboard' campaign.id %}" class="py-2 px-4 border border-gray-700 bg-darker rounded-md shadow-sm text-sm font-medium text-gray-300 hover:bg-gray-800 transition">Back to Dashboard</a>
+        <a href="{% url 'campaigns:download' campaign.id %}" class="py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-secondary hover:bg-green-600 transition">Export / Print</a>
+      </div>
+    </div>
+
+    {% if messages %}
+      {% for message in messages %}
+        <div class="p-4 rounded-lg bg-blue-900/50 text-blue-200 border border-blue-800">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <!-- Source Column -->
+      <div class="lg:col-span-4 space-y-6">
+        <div class="bg-dark border border-gray-800 rounded-xl p-5 shadow-sm sticky top-24">
+          <h3 class="text-lg font-medium text-white mb-3">Original Source</h3>
+          <div class="bg-darker rounded p-4 max-h-[600px] overflow-y-auto text-sm text-gray-400 font-mono whitespace-pre-wrap">{{ campaign.source_text }}</div>
+        </div>
+      </div>
+
+      <!-- Generated Content Column -->
+      <div class="lg:col-span-8 space-y-6">
+        {% for piece in pieces %}
+          <div class="bg-dark border border-gray-800 rounded-xl p-6 shadow-sm">
+            <div class="flex justify-between items-start mb-4 border-b border-gray-800 pb-4">
+              <div>
+                <h2 class="text-xl font-bold text-white flex items-center">
+                  {{ piece.get_channel_display }}
+                  {% if piece.status == 'approved' %}
+                    <span class="ml-3 px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-900/50 text-green-400 border border-green-800">Approved</span>
+                  {% elif piece.status == 'rejected' %}
+                    <span class="ml-3 px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-900/50 text-red-400 border border-red-800">Needs Rewrite</span>
+                  {% else %}
+                    <span class="ml-3 px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-900/50 text-yellow-400 border border-yellow-800">Drafting</span>
+                  {% endif %}
+                </h2>
+                <p class="text-xs text-gray-500 mt-1">Iterations: {{ piece.iteration_count }}</p>
+              </div>
+
+              <button onclick="copyToClipboard('content-{{ piece.id }}')" class="text-gray-400 hover:text-white transition">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                </svg>
+              </button>
+            </div>
+
+            <div id="content-{{ piece.id }}" class="prose prose-invert max-w-none text-gray-300 mb-6 whitespace-pre-wrap">{{ piece.content }}</div>
+
+            <!-- Regeneration Form -->
+            <div class="bg-darker rounded-lg p-4 border border-gray-800 mt-4">
+              <form action="{% url 'campaigns:regenerate' piece.id %}" method="post" class="flex flex-col sm:flex-row gap-3">
+                {% csrf_token %}
+                <input type="text" name="feedback" placeholder="Optional: Provide feedback for the rewrite (e.g. 'Make it punchier')" class="flex-1 rounded-md bg-dark border-gray-700 text-white focus:border-primary focus:ring-primary sm:text-sm p-2" />
+                <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition">
+                  <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                  </svg>Regenerate
+                </button>
+              </form>
+            </div>
+          </div>
+        {% empty %}
+          <div class="text-center py-12 bg-dark rounded-xl border border-gray-800">
+            <svg class="mx-auto h-12 w-12 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+              <path vector-effect="non-scaling-stroke" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
+            </svg>
+            <h3 class="mt-2 text-sm font-medium text-gray-300">No content generated yet</h3>
+            <p class="mt-1 text-sm text-gray-500">The agents are still working on your campaign.</p>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block extra_scripts %}
+  <script>
+    function copyToClipboard(elementId) {
+      const content = document.getElementById(elementId).innerText
+      navigator.clipboard
+        .writeText(content)
+        .then(() => {
+          alert('Copied to clipboard!')
+        })
+        .catch((err) => {
+          console.error('Failed to copy: ', err)
+        })
+    }
+  </script>
+{% endblock %}

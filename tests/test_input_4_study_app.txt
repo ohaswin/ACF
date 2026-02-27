@@ -1,0 +1,23 @@
+App Name: "GradeGuardian" Study Planner
+
+Description:
+College is hard enough without forgetting an unpredictable midterm popping up. GradeGuardian is a mobile app designed specifically for college students to organize their messy syllabuses into one clean, actionable calendar.
+
+Target Audience:
+College or high school students who feel overwhelmed by assignments, exams, and extracurriculars, and want to stop procrastinating or cramming at the last minute.
+
+Features:
+- Instant Syllabus Scanner: Take a picture of your class syllabus, and the AI automatically imports all quiz dates, reading assignments, and exam times into the calendar.
+- Smart Priorities: The app calculates how long an assignment will likely take and blocks out study time in your calendar for you automatically.
+- Progress Bars: See exactly how far along you are in completing a major essay so you don't panic the night before.
+- Distraction Blockers: An integrated "focus mode" that locks social media apps on your phone while you study for 25-minute Pomodoro sessions.
+
+Price:
+Free basic version. Premium is $4.99/month and unlocks the Syllabus Scanner and unlimited focus sessions.
+
+The Value Proposition:
+Never miss a deadline again. GradeGuardian acts like a personal academic assistant that plans your study sessions for you, reducing anxiety and helping you get better grades with less cramming.
+
+Marketing Notes:
+- We don't want to sound like nagging parents. The tone should be highly relatable to stressed students. Talk about all-nighters, coffee runs, and getting peace of mind before the weekend.
+- Clarify that the Syllabus Scanner is a premium feature, otherwise people downloading the free app might leave bad reviews.
