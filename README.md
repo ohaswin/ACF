@@ -1,11 +1,18 @@
 <div align="center">
   <h1>🏭 Autonomous Content Factory</h1>
   <p>An AI-driven pipeline that instantly transforms raw technical content into high-quality, multi-channel marketing campaigns.</p>
+  <br>
+  <a href="https://youtu.be/Cn5YVNLUJpA">
+    <img src="https://img.shields.io/badge/Watch%20Demo%20Video-FF0000?style=for-the-badge&logo=youtube&logoColor=white" alt="Watch Demo Video" />
+  </a>
+  <br>
 </div>
 
 ---
 
 ## 📖 Overview
+
+
 
 The **Autonomous Content Factory** is an internal marketing tool designed to combat "Creative Burnout" and guarantee brand consistency. Instead of manually rewriting the same product announcement into various formats, users simply provide a single source document. An assembly line of specialized AI agents then collaborates to analyze the text, extract accurate facts, and instantly generate coordinated content for blogs, social media, and emails—all while providing real-time visibility into their decision-making process.
 
