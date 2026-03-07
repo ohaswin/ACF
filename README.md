@@ -2,12 +2,13 @@
   <h1>🏭 Autonomous Content Factory</h1>
   <p>An AI-driven pipeline that instantly transforms raw technical content into high-quality, multi-channel marketing campaigns.</p>
   <br>
-  <a href="https://youtu.be/Cn5YVNLUJpA">
+  <a href="https://youtu.be/xAwWot83Guo?si=-fXm7QiFwl3fR8x4">
     <img src="https://img.shields.io/badge/Watch%20Demo%20Video-FF0000?style=for-the-badge&logo=youtube&logoColor=white" alt="Watch Demo Video" />
   </a>
   <br>
 </div>
 
+https://youtu.be/xAwWot83Guo?si=-fXm7QiFwl3fR8x4
 ---
 
 ## 📖 Overview
